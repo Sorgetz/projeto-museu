@@ -13,11 +13,13 @@
     <div id="startScreen">
         <div id="startScreen-items">
             <img src="img/logo.jpg"/> 
-            <button id="buttonStart" onclick="setInvisible()" >Começar</button>
+            <button id="buttonStart" onclick="callStartScreen()" >Começar</button>
         </div>
     </div>
+    <div>
+        <img id="intro" src="intro.gif" />
+    </div>
     <div id="loading">
-        <!-- <p>Carregando... Aguarde</p> -->
         <img src="img/loading.gif"/>
     </div>
     <iframe src="map_iframe.html" scrolling="no" seamless="seamless" class="mapa" onload="isLoaded()" >
@@ -40,25 +42,30 @@
         top: 50%;
         left: 50%;
         text-align: center;
-        /* display: flex; */
         margin: 0 auto;
         color: #3c4043;
-
-
     }
     
     #loading {
         background-color: #f1f2f3;
         text-align: center;
         margin-top: 15%;
-        /* margin: 0 auto; */
         height:100vh;
         width:100vw;
         opacity: 1;
     }
     
+    #intro {
+        height:100vh;
+        width: auto;
+        opacity: 1;
+        display: flex;
+        justify-content: center;
+        /* position: absolute; */
+        display: none;
+    }
+
     iframe {
-        /* height:98vh; */
         height:100vh;
         width:100vw;
         overflow-y: hidden;
@@ -66,16 +73,10 @@
     }
 
     #startScreen {
-        /* position: absolute; */
-        /* background-color: rgb(255, 255, 255);
-         */
         height:100vh;
         width:100vw;
         background-color: #f1f2f3;
-        display: block;
-
-        /* position: relative; */
-    
+        display: block;    
     }
 
     #startScreen-items {
@@ -164,28 +165,46 @@
 
     let startScreen =  document.getElementById('startScreen');
     let loading = document.getElementById('loading');
+    let intro = document.getElementById('intro');
+    let calledIsLoaded = false;
+    let calledStartScreen = false;
     
-    
-    function setInvisible(button) {
-        // startScreen.classList.add('fade-out');
-        startScreen.style.display = 'None'
+    function dissapearEffect(event) {
+        event.classList.add('fade-out');
+        setInterval( function() {
+            event.style.display = 'None'
+        }, 2000)
+    }
+
+    function callIntro() {
+        intro.style.display = 'Block'
+        setInterval( function() {
+            dissapearEffect(intro)
+        }, 5000)
+    }
+
+    function callStartScreen() {
+        calledStartScreen = true;
+        dissapearEffect(startScreen)
+        if(calledIsLoaded ) {
+            callIntro()
+        }
     }
     
     function isLoaded() {
-        loading.classList.add('fade-out');
-        setInterval( function() {
-            loading.style.display = 'None'
-        }, 2000)
+        calledIsLoaded = true;
+        dissapearEffect(loading)
+        if(calledStartScreen) {
+            callIntro()
+        }
     }
     
     setInterval(function() {
-        // startScreen.classList.remove('fade-out');
-        // startScreen.style.opacity = '1'
-        startScreen.style.display = 'Block'
+        callStartScreen.style.display = 'Block'
         window.location.reload()
+        calledIsLoaded = false;
+        calledStartScreen = false;
     }, 300000);
-
-    //300000
 
 </script>
 
